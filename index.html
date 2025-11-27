@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Encuesta Rotisería</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Votá tu combo favorito !</h1>
+
+  <form id="formVotos">
+    <label><input type="radio" name="combo" value="La insuperable"> Combo 1: La insuperable</label><br>
+    <label><input type="radio" name="combo" value="La Finoli"> Combo 2: La Finoli</label><br>
+    <label><input type="radio" name="combo" value="La pesada"> Combo 3: La pesada</label><br>
+    <label><input type="radio" name="combo" value="Sopa de Tubo"> Combo 4: Sopa de Tubo</label><br>
+    <label><input type="radio" name="combo" value="El Patriota"> Combo 5: El Patriota</label><br>
+    <label><input type="radio" name="combo" value="Diablo ácido"> Combo 6: Diablo ácido</label><br><br>
+    
+    <button type="submit">Votar</button>
+  </form>
+
+  <h2>Resultados</h2>
+  <canvas id="grafico"></canvas>
+
+  <script>
+    let votos = {
+      "La insuperable": 0,
+      "La Finoli": 0,
+      "La pesada": 0,
+      "Sopa de Tubo": 0,
+      "El Patriota": 0,
+      "Diablo ácido": 0
+    };
+
+    document.getElementById("formVotos").addEventListener("submit", function(e) {
+      e.preventDefault();
+      let seleccionado = document.querySelector('input[name="combo"]:checked');
+      if (seleccionado) {
+        votos[seleccionado.value] += 1;
+        actualizarGrafico();
+      }
+    });
+
+    const ctx = document.getElementById('grafico').getContext('2d');
+    const grafico = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: Object.keys(votos), 
+        datasets: [{
+          label: 'Cantidad de votos',
+          data: Object.values(votos), 
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.6)',
+            'rgba(54, 162, 235, 0.6)',
+            'rgba(255, 206, 86, 0.6)',
+            'rgba(75, 192, 192, 0.6)',
+            'rgba(153, 102, 255, 0.6)',
+            'rgba(255, 159, 64, 0.6)'
+          ],
+          borderColor: 'black',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    function actualizarGrafico() {
+      grafico.data.datasets[0].data = Object.values(votos);
+      grafico.update();
+    }
+  </script>
+</body>
+</html>
